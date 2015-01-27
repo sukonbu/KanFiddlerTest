@@ -1,0 +1,8 @@
+﻿*.png
+*.bmp
+*.jpg
+*.ico
+*.txt
+
+/Debug
+/Release
