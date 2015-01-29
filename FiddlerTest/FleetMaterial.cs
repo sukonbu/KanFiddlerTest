@@ -8,14 +8,23 @@ namespace FiddlerTest
 {
     class FleetMaterial
     {
-        private double fuel;
+		//private double fuel;
+
+		//public double Fuel
+		//{
+		//	get { return fuel; }
+		//	set { fuel = value; }
+		//}
+
+		public double Fuel { get; private set; }
+
         private double ammunition;
         private double steel;
         private double bauxite;
 
         public FleetMaterial(double fuel, double ammunition, double steel, double bauxite)
         {
-            this.fuel = fuel;
+            this.Fuel = fuel;
             this.ammunition = ammunition;
             this.steel = steel;
             this.bauxite = bauxite;
@@ -23,17 +32,12 @@ namespace FiddlerTest
 
         public void setFleetMaterial(double fuel, double ammunition, double steel, double bauxite)
         {
-            this.fuel = fuel;
+            this.Fuel = fuel;
             this.ammunition = ammunition;
             this.steel = steel;
             this.bauxite = bauxite;
         }
 
-
-        public void setFuel(double Fuel)
-        {
-            fuel = Fuel;
-        }
 
         public void setAmmunition(double Ammunition)
         {
@@ -50,10 +54,6 @@ namespace FiddlerTest
             bauxite = Bauxite;
         }
 
-        public double getFuel()
-        {
-            return fuel;
-        }
 
         public double getAmmunition()
         {
@@ -72,7 +72,7 @@ namespace FiddlerTest
         
         public override string ToString()
         {
-            return string.Format("資材  燃料:{0}/弾薬:{1}/鋼材:{2}/ボーキサイト:{3}", fuel, ammunition, steel, bauxite);
+            return string.Format("資材  燃料:{0}/弾薬:{1}/鋼材:{2}/ボーキサイト:{3}", Fuel, ammunition, steel, bauxite);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace FiddlerTest
             Fiddler.FiddlerApplication.AfterSessionComplete
                 += new Fiddler.SessionStateHandler(FiddlerApplication_AfterSessionComplete);
 
-            Fiddler.FiddlerApplication.Startup(0,Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway);
+            Fiddler.FiddlerApplication.Startup(8080,Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway);
 
            // FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);
 
@@ -93,7 +93,7 @@ namespace FiddlerTest
 
                             Console.WriteLine(material);
                             //Console.WriteLine(fuel + "," + ammunition + "," + steel + "," + bauxite);
-                            var recipeFuel = beforeFuel - material.getFuel();
+                            var recipeFuel = beforeFuel - material.Fuel;
                             var recipeAmmunition = beforeAmmunition - material.getAmmunition();
                             var recipeSteel = beforeSteel - material.getSteel();
                             var recipeBauxite = beforeBauxite - material.getBauxite();
@@ -145,7 +145,7 @@ namespace FiddlerTest
 
                         //dataGridView1.Rows.Clear();
                         //dataGridView1.Rows.Add(fuel,ammunition,steel,bauxite);
-                        beforeFuel = material.getFuel();
+                        beforeFuel = material.Fuel;
                         beforeAmmunition = material.getAmmunition();
                         beforeSteel = material.getSteel();
                         beforeBauxite = material.getBauxite();
@@ -221,5 +221,10 @@ namespace FiddlerTest
         {
             this.Close();
         }
+
+		private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+		{
+
+		}
     }
 }
