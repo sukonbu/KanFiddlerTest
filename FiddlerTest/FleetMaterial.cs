@@ -18,61 +18,29 @@ namespace FiddlerTest
 
 		public double Fuel { get; private set; }
 
-        private double ammunition;
-        private double steel;
-        private double bauxite;
+        public double Ammunition { get; private set; }
+		public double Steel	{ get; private set;	}
+		public double Bauxite { get; private set; }
 
         public FleetMaterial(double fuel, double ammunition, double steel, double bauxite)
         {
             this.Fuel = fuel;
-            this.ammunition = ammunition;
-            this.steel = steel;
-            this.bauxite = bauxite;
+            this.Ammunition = ammunition;
+            this.Steel = steel;
+            this.Bauxite = bauxite;
         }
 
         public void setFleetMaterial(double fuel, double ammunition, double steel, double bauxite)
         {
             this.Fuel = fuel;
-            this.ammunition = ammunition;
-            this.steel = steel;
-            this.bauxite = bauxite;
-        }
-
-
-        public void setAmmunition(double Ammunition)
-        {
-            ammunition = Ammunition;
-        }
-
-        public void setSteel(double Steel)
-        {
-            steel = Steel;
-        }
-
-        public void setBauxite(double Bauxite)
-        {
-            bauxite = Bauxite;
-        }
-
-
-        public double getAmmunition()
-        {
-            return ammunition;
-        }
-
-        public double getSteel()
-        {
-            return steel;
-        }
-
-        public double getBauxite()
-        {
-            return bauxite;
+            this.Ammunition = ammunition;
+            this.Steel = steel;
+            this.Bauxite = bauxite;
         }
         
         public override string ToString()
         {
-            return string.Format("資材  燃料:{0}/弾薬:{1}/鋼材:{2}/ボーキサイト:{3}", Fuel, ammunition, steel, bauxite);
+            return string.Format("資材  燃料:{0}/弾薬:{1}/鋼材:{2}/ボーキサイト:{3}", Fuel, Ammunition, Steel, Bauxite);
         }
     }
 }
