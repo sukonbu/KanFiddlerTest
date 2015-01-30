@@ -19,21 +19,12 @@ namespace FiddlerTest
 {
 	public partial class Form1 : Form
 	{
-		private static double beforeFuel;
-		private static double beforeAmmunition;
-		private static double beforeSteel;
-		private static double beforeBauxite;
-		private FleetMaterial material;
-		private List<Kaihatsu> kaihatsuResultList = new List<Kaihatsu>();
+		private FleetMaterial fleetMaterial = new FleetMaterial();
 
-		public Form1()
-		{
-			beforeFuel = 0;
-			beforeAmmunition = 0;
-			beforeSteel = 0;
-			beforeBauxite = 0;
-			material = new FleetMaterial(0, 0, 0, 0);
 
+		private List<KaihatsuResult> kaihatsuResultList = new List<KaihatsuResult>();
+
+		public Form1(){
 
 			InitializeComponent();
 			//Control.CheckForIllegalCrossThreadCalls = false; //スレッドセーフを無視する最終手段
@@ -43,10 +34,10 @@ namespace FiddlerTest
 
 			Fiddler.FiddlerApplication.Startup(8080, Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway); //プロキシの設定(この場合は、ローカルのプロキシで第1引数のポート番号で通信)
 
-			// FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);
+			// FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);  //システムのプロキシの設定全部乗っ取る
 
 			URLMonInterop.SetProxyInProcess(string.Format("127.0.0.1:{0}", Fiddler.FiddlerApplication.oProxy.ListenPort), "<local>");
-			//oSession["x-overrideGateway"] = string.Format("localhost:{0:D}", proxy.UpstreamPort); // 上流プロキシの設定
+			//oSession["x-overrideGateway"] = string.Format("localhost:{0:D}", proxy.UpstreamPort); // 上流プロキシの設定?
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -61,104 +52,88 @@ namespace FiddlerTest
 
 
 
-			if (true)//oSession.fullUrl.Contains("125.6.189.247"))  //宿毛湾泊地サーバのIP
+			if (true) //oSession.fullUrl.Contains("125.6.189.247"))  //宿毛湾泊地サーバのIP
 			{
-				var result = oSession.GetResponseBodyAsString();
-				Debug.WriteLine(result);
+				var responseResult = oSession.GetResponseBodyAsString();
+				Debug.WriteLine(responseResult);
 				if (oSession.fullUrl.Contains("/kcsapi/"))
 				{
 
 					Console.WriteLine(string.Format("Session{0}({3}):HTTP {1} for {2}", oSession.id, oSession.responseCode, oSession.fullUrl, oSession.oResponse.MIMEType));
 					Debug.WriteLine(string.Format("Session{0}({3}):HTTP {1} for {2}", oSession.id, oSession.responseCode, oSession.fullUrl, oSession.oResponse.MIMEType));
 
-					//string text = (string.Format("Session{0}({3}):HTTP {1} for {2}", oSession.id, oSession.responseCode, oSession.fullUrl, oSession.oResponse.MIMEType));
-					//richTextBox1.AppendText(text+"\n");
-
 					try
 					{
-						var jsonData = DynamicJson.Parse(result.Replace("svdata=", string.Empty));
+						var jsonData = DynamicJson.Parse(responseResult.Replace("svdata=", string.Empty));
 
-						object[] slotitems = jsonData.api_data.api_mst_slotitem;
-						using (var log = new StreamWriter(new FileStream("log.txt", FileMode.Append)))
-						{
-							foreach (var slotitem in slotitems)
-							{
-								log.WriteLine(slotitem);
-							}
-						}
+						//object[] slotitems = jsonData.api_data.api_mst_slotitem;
+						//using (var log = new StreamWriter(new FileStream("log.txt", FileMode.Append)))
+						//{
+						//	foreach (var slotitem in slotitems)
+						//	{
+						//		log.WriteLine(slotitem);
+						//	}
+						//}
 
-						// string material = null;
-						//double fuel = -1, ammunition = -1, steel = -1, bauxite = -1;
 
 						if (oSession.fullUrl.Contains("api_req_kousyou/createitem"))//開発時のapiリクエスト
 						{
-							//material = string.Format("資材残量   燃料:{0},弾薬:{1},鋼材:{2},ボーキサイト{3}", jsonData.api_data.api_material[0], jsonData.api_data.api_material[1], jsonData.api_data.api_material[2], jsonData.api_data.api_material[3]);
-
-							//fuel = jsonData.api_data.api_material[0];
-							//ammunition = jsonData.api_data.api_material[1];
-							//steel = jsonData.api_data.api_material[2];
-							//bauxite = jsonData.api_data.api_material[3];
-							material.setFleetMaterial(jsonData.api_data.api_material[0], jsonData.api_data.api_material[1], jsonData.api_data.api_material[2], jsonData.api_data.api_material[3]);
+							fleetMaterial.NowMaterial.Fuel = jsonData.api_data.api_material[0];
+							fleetMaterial.NowMaterial.Ammunition = jsonData.api_data.api_material[1];
+							fleetMaterial.NowMaterial.Steel = jsonData.api_data.api_material[2];
+							fleetMaterial.NowMaterial.Bauxite = jsonData.api_data.api_material[3];
 
 
-							Console.WriteLine(material);
-							//Console.WriteLine(fuel + "," + ammunition + "," + steel + "," + bauxite);
-							var recipeFuel = beforeFuel - material.Fuel;
-							var recipeAmmunition = beforeAmmunition - material.Ammunition;
-							var recipeSteel = beforeSteel - material.Steel;
-							var recipeBauxite = beforeBauxite - material.Bauxite;
+							//Console.WriteLine(fleetMaterial.BeforeMaterial);
+							//Console.WriteLine(fleetMaterial.NowMaterial);
 
-							//var kaihatsuResult = "";
-							//var equipName = -0.0;
+							Material recipeMaterial = new Material();
+							recipeMaterial.Fuel = fleetMaterial.BeforeMaterial.Fuel - fleetMaterial.NowMaterial.Fuel;
+							recipeMaterial.Ammunition = fleetMaterial.BeforeMaterial.Ammunition - fleetMaterial.NowMaterial.Ammunition;
+							recipeMaterial.Steel = fleetMaterial.BeforeMaterial.Steel - fleetMaterial.NowMaterial.Steel;
+							recipeMaterial.Bauxite = fleetMaterial.BeforeMaterial.Bauxite - fleetMaterial.NowMaterial.Bauxite;
+
+
+							KaihatsuResult kaihatsuResult = new KaihatsuResult();
+							kaihatsuResult.Recipe = recipeMaterial;
+							kaihatsuResult.FlagShipName = "";
+							kaihatsuResult.FlagShipLv = 0;
+							kaihatsuResult.FleetLv = 0;
 
 							if (jsonData.api_data.api_create_flag == 1)
 							{
 								//kaihatsuResult = "成功";
 								//equipName = jsonData.api_data.api_slot_item.api_slotitem_id;
-
-								kaihatsuResultList.Add(new Kaihatsu(new double[] { recipeFuel, recipeAmmunition, recipeSteel, recipeBauxite }, true, "", 0, 0, jsonData.api_data.api_slot_item.api_slotitem_id.ToString()));
-
+								kaihatsuResult.IsSuccess = true;
+								kaihatsuResult.ItemName = jsonData.api_data.api_slot_item.api_slotitem_id.ToString();
 							}
 							else
 							{
 								//kaihatsuResult = "失敗";
 								//equipName = jsonData.api_data.api_fdata;
-								kaihatsuResultList.Add(new Kaihatsu(new double[] { recipeFuel, recipeAmmunition, recipeSteel, recipeBauxite }, false, "", 0, 0, jsonData.api_data.api_fdata.ToString()));
+								kaihatsuResult.IsSuccess = false;
+								kaihatsuResult.ItemName = jsonData.api_data.api_fdata;
 							}
-
-
-
+							kaihatsuResultList.Add(kaihatsuResult);
 
 							//Console.WriteLine("レシピ：" +recipeFuel +"/" +recipeAmmunition +"/"+recipeSteel +"/" +recipeBauxite +"\t開発結果:" +kaihatsuResult +"\t装備id (?):" +equipName);
 							Console.WriteLine(kaihatsuResultList[(kaihatsuResultList.Count - 1)]);
 						}
 						else if (oSession.fullUrl.Contains("api_port/port"))//母港開いた時のリクエスト
 						{
-							//material = string.Format("資材残量   燃料:{0}/弾薬:{1}/鋼材:{2}/ボーキサイト:{3}", jsonData.api_data.api_material[0].api_value, jsonData.api_data.api_material[1].api_value, jsonData.api_data.api_material[2].api_value, jsonData.api_data.api_material[3].api_value);
-							//fuel = jsonData.api_data.api_material[0].api_value;
-							//ammunition = jsonData.api_data.api_material[1].api_value;
-							//steel = jsonData.api_data.api_material[2].api_value;
-							//bauxite = jsonData.api_data.api_material[3].api_value;
+							fleetMaterial.NowMaterial.Fuel = jsonData.api_data.api_material[0].api_value;
+							fleetMaterial.NowMaterial.Ammunition = jsonData.api_data.api_material[1].api_value;
+							fleetMaterial.NowMaterial.Steel = jsonData.api_data.api_material[2].api_value;
+							fleetMaterial.NowMaterial.Bauxite = jsonData.api_data.api_material[3].api_value;
 
-							material.setFleetMaterial(jsonData.api_data.api_material[0].api_value, jsonData.api_data.api_material[1].api_value, jsonData.api_data.api_material[2].api_value, jsonData.api_data.api_material[3].api_value);
-
-							Console.WriteLine(material);
-							//Console.WriteLine(fuel +"," +ammunition +"," +steel +"," +bauxite);
+							Console.WriteLine(fleetMaterial.NowMaterial);
 						}
 						else
 						{
 							//material = "うんこ";
 						}
 
-
-						//richTextBox1.AppendText(material+"\n");
-
-						//dataGridView1.Rows.Clear();
-						//dataGridView1.Rows.Add(fuel,ammunition,steel,bauxite);
-						beforeFuel = material.Fuel;
-						beforeAmmunition = material.Ammunition;
-						beforeSteel = material.Steel;
-						beforeBauxite = material.Bauxite;
+						fleetMaterial.BeforeMaterial = (Material)fleetMaterial.NowMaterial.Clone();
 
 					}
 					catch (Exception e)

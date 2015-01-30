@@ -66,7 +66,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="FleetMaterial.cs" />
-    <Compile Include="Kaihatsu.cs" />
+    <Compile Include="KaihatsuResult.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
