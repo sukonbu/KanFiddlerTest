@@ -24,7 +24,8 @@ namespace FiddlerTest
 
 		private List<KaihatsuResult> kaihatsuResultList = new List<KaihatsuResult>();
 
-		public Form1(){
+		public Form1()
+		{
 
 			InitializeComponent();
 			//Control.CheckForIllegalCrossThreadCalls = false; //スレッドセーフを無視する最終手段
@@ -114,7 +115,15 @@ namespace FiddlerTest
 								kaihatsuResult.IsSuccess = false;
 								kaihatsuResult.ItemName = jsonData.api_data.api_fdata;
 							}
-							kaihatsuResultList.Add(kaihatsuResult);
+
+
+							kaihatsuResultList.Add(kaihatsuResult); //開発結果の追加
+
+							using (var log = new StreamWriter(new FileStream("kaihatsuResult_log.txt", FileMode.Append)))
+							{
+								log.WriteLine(kaihatsuResult); //ログを残す
+							}
+
 
 							//Console.WriteLine("レシピ：" +recipeFuel +"/" +recipeAmmunition +"/"+recipeSteel +"/" +recipeBauxite +"\t開発結果:" +kaihatsuResult +"\t装備id (?):" +equipName);
 							Console.WriteLine(kaihatsuResultList[(kaihatsuResultList.Count - 1)]);
