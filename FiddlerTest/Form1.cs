@@ -19,6 +19,7 @@ namespace FiddlerTest
 {
 	public partial class Form1 : Form
 	{
+		private Start2Json start2 = new Start2Json();
 		private FleetMaterial fleetMaterial = new FleetMaterial();
 
 
@@ -77,6 +78,25 @@ namespace FiddlerTest
 						//}
 
 
+						
+
+
+						if (oSession.fullUrl.Contains("api_start2"))
+						{
+							start2 = jsonData;
+							//using (var log = new StreamWriter(new FileStream("start2_log.txt", FileMode.Append)))
+							//{
+							//	log.WriteLine(start2);
+
+							//}
+							object[] slotitems = jsonData.api_data.api_mst_slotitem;
+							foreach (var slotitem in slotitems)
+							{
+								Console.WriteLine(slotitem.ToString());
+								start2.SlotItemList.Add(slotitem);
+							}
+						}
+
 						if (oSession.fullUrl.Contains("api_req_kousyou/createitem"))//開発時のapiリクエスト
 						{
 							fleetMaterial.NowMaterial.Fuel = jsonData.api_data.api_material[0];
@@ -106,7 +126,8 @@ namespace FiddlerTest
 								//kaihatsuResult = "成功";
 								//equipName = jsonData.api_data.api_slot_item.api_slotitem_id;
 								kaihatsuResult.IsSuccess = true;
-								kaihatsuResult.ItemName = jsonData.api_data.api_slot_item.api_slotitem_id.ToString();
+								int itemId = int.Parse(jsonData.api_data.api_slot_item.api_slotitem_id.ToString());
+								kaihatsuResult.ItemName = start2.getItemName(itemId);
 							}
 							else
 							{
@@ -114,6 +135,10 @@ namespace FiddlerTest
 								//equipName = jsonData.api_data.api_fdata;
 								kaihatsuResult.IsSuccess = false;
 								kaihatsuResult.ItemName = jsonData.api_data.api_fdata;
+
+								int itemId = int.Parse(jsonData.api_data.api_fdata.Split(',')[1]);
+								//Console.WriteLine("itemId={0}",itemId);
+								kaihatsuResult.ItemName = start2.getItemName(itemId);
 							}
 
 
