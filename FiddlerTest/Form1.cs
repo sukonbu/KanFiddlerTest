@@ -19,6 +19,8 @@ namespace FiddlerTest
 {
 	public partial class Form1 : Form
 	{
+		private const int PROXY_PORT = 8080;  //プロキシのポート番号
+
 		private Start2Json start2 = new Start2Json();
 		private FleetMaterial fleetMaterial = new FleetMaterial();
 
@@ -29,12 +31,11 @@ namespace FiddlerTest
 		{
 
 			InitializeComponent();
-			//Control.CheckForIllegalCrossThreadCalls = false; //スレッドセーフを無視する最終手段
 
 			Fiddler.FiddlerApplication.AfterSessionComplete
 				+= new Fiddler.SessionStateHandler(FiddlerApplication_AfterSessionComplete);
 
-			Fiddler.FiddlerApplication.Startup(8080, Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway); //プロキシの設定(この場合は、ローカルのプロキシで第1引数のポート番号で通信)
+			Fiddler.FiddlerApplication.Startup(PROXY_PORT, Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway); //プロキシの設定(この場合は、ローカルのプロキシで第1引数のポート番号で通信)
 
 			// FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);  //システムのプロキシの設定全部乗っ取る
 
