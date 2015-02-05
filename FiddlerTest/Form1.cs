@@ -72,7 +72,7 @@ namespace FiddlerTest
 						//装備のデータリスト(jsonData.api_data.api_mst_slotitem)を取得しログに吐く
 
 						object[] slotitemsLog = jsonData.api_data.api_mst_slotitem;
-						using (var log = new StreamWriter(new FileStream("Start2_EquipLog.txt", FileMode.Append)))
+						using (var log = new StreamWriter(new FileStream("Start2_EquipLog.txt", FileMode.Create)))
 						{
 							foreach (var slotitem in slotitemsLog)
 							{
@@ -83,7 +83,7 @@ namespace FiddlerTest
 						//艦娘のデータリスト(jsonData.api_data.api_mst_ship)を取得しログに吐く
 
 						object[] shipsLog = jsonData.api_data.api_mst_ship;
-						using (var log = new StreamWriter(new FileStream("Start2_ShipLog.txt", FileMode.Append)))
+						using (var log = new StreamWriter(new FileStream("Start2_ShipLog.txt", FileMode.Create)))
 						{
 							foreach (var ship in shipsLog)
 							{
