@@ -19,7 +19,7 @@ namespace FiddlerTest
 {
 	public partial class Form1 : Form
 	{
-		private const int PROXY_PORT = 8080;  //プロキシのポート番号
+		private const int PROXY_PORT = 8080;  //プロキシのポート番号ｃ
 
 		private Start2Json start2 = new Start2Json();
 		private FleetMaterial fleetMaterial = new FleetMaterial();
@@ -69,18 +69,27 @@ namespace FiddlerTest
 					{
 						var jsonData = DynamicJson.Parse(responseResult.Replace("svdata=", string.Empty));
 
-						//object[] slotitems = jsonData.api_data.api_mst_slotitem;
-						//using (var log = new StreamWriter(new FileStream("log.txt", FileMode.Append)))
-						//{
-						//	foreach (var slotitem in slotitems)
-						//	{
-						//		log.WriteLine(slotitem);
-						//	}
-						//}
+						//装備のデータリスト(jsonData.api_data.api_mst_slotitem)を取得しログに吐く
 
+						object[] slotitemsLog = jsonData.api_data.api_mst_slotitem;
+						using (var log = new StreamWriter(new FileStream("Start2_EquipLog.txt", FileMode.Append)))
+						{
+							foreach (var slotitem in slotitemsLog)
+							{
+								log.WriteLine(slotitem);
+							}
+						}
 
-						
+						//艦娘のデータリスト(jsonData.api_data.api_mst_ship)を取得しログに吐く
 
+						object[] shipsLog = jsonData.api_data.api_mst_ship;
+						using (var log = new StreamWriter(new FileStream("Start2_ShipLog.txt", FileMode.Append)))
+						{
+							foreach (var ship in shipsLog)
+							{
+								log.WriteLine(ship);
+							}
+						}
 
 						if (oSession.fullUrl.Contains("api_start2"))
 						{
@@ -95,6 +104,12 @@ namespace FiddlerTest
 							{
 								Console.WriteLine(slotitem.ToString());
 								start2.SlotItemList.Add(slotitem);
+							}
+							object[] ships = jsonData.api_data.api_mst_ship;
+							foreach (var ship in ships)
+							{
+								Console.WriteLine(ship.ToString());
+								start2.SlotItemList.Add(ship);
 							}
 						}
 
