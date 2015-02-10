@@ -58,7 +58,7 @@ namespace FiddlerTest
 			if (true) //oSession.fullUrl.Contains("125.6.189.247"))  //宿毛湾泊地サーバのIP
 			{
 				var responseResult = oSession.GetResponseBodyAsString();
-				Debug.WriteLine(responseResult);
+				//Debug.WriteLine(responseResult);
 				if (oSession.fullUrl.Contains("/kcsapi/"))
 				{
 
@@ -70,25 +70,29 @@ namespace FiddlerTest
 						var jsonData = DynamicJson.Parse(responseResult.Replace("svdata=", string.Empty));
 
 						//装備のデータリスト(jsonData.api_data.api_mst_slotitem)を取得しログに吐く
-
-						object[] slotitemsLog = jsonData.api_data.api_mst_slotitem;
-						using (var log = new StreamWriter(new FileStream("Start2_EquipLog.txt", FileMode.Create)))
+						try
 						{
-							foreach (var slotitem in slotitemsLog)
+							object[] slotitemsLog = jsonData.api_data.api_mst_slotitem;
+							using (var log = new StreamWriter(new FileStream("Start2_EquipLog.txt", FileMode.Create)))
 							{
-								log.WriteLine(slotitem);
+								foreach (var slotitem in slotitemsLog)
+								{
+									log.WriteLine(slotitem);
+								}
 							}
-						}
 
-						//艦娘のデータリスト(jsonData.api_data.api_mst_ship)を取得しログに吐く
+							//艦娘のデータリスト(jsonData.api_data.api_mst_ship)を取得しログに吐く
 
-						object[] shipsLog = jsonData.api_data.api_mst_ship;
-						using (var log = new StreamWriter(new FileStream("Start2_ShipLog.txt", FileMode.Create)))
-						{
-							foreach (var ship in shipsLog)
+							object[] shipsLog = jsonData.api_data.api_mst_ship;
+							using (var log = new StreamWriter(new FileStream("Start2_ShipLog.txt", FileMode.Create)))
 							{
-								log.WriteLine(ship);
+								foreach (var ship in shipsLog)
+								{
+									log.WriteLine(ship);
+								}
 							}
+						}catch(Exception excep){
+							//Console.WriteLine(excep);
 						}
 
 						if (oSession.fullUrl.Contains("api_start2"))
@@ -102,13 +106,13 @@ namespace FiddlerTest
 							object[] slotitems = jsonData.api_data.api_mst_slotitem;
 							foreach (var slotitem in slotitems)
 							{
-								Console.WriteLine(slotitem.ToString());
+								//Console.WriteLine(slotitem.ToString());
 								start2.SlotItemList.Add(slotitem);
 							}
 							object[] ships = jsonData.api_data.api_mst_ship;
 							foreach (var ship in ships)
 							{
-								Console.WriteLine(ship.ToString());
+								//Console.WriteLine(ship.ToString());
 								start2.SlotItemList.Add(ship);
 							}
 						}
