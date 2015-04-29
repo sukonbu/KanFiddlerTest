@@ -19,7 +19,7 @@ namespace FiddlerTest
 {
 	public partial class Form1 : Form
 	{
-		private const int PROXY_PORT = 8080;  //プロキシのポート番号ｃ
+		private const int PROXY_PORT = 8080;  //プロキシのポート番号
 
 		private Start2Json start2 = new Start2Json();
 		private FleetMaterial fleetMaterial = new FleetMaterial();
@@ -37,7 +37,7 @@ namespace FiddlerTest
 
 			Fiddler.FiddlerApplication.Startup(PROXY_PORT, Fiddler.FiddlerCoreStartupFlags.ChainToUpstreamGateway); //プロキシの設定(この場合は、ローカルのプロキシで第1引数のポート番号で通信)
 
-			// FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);  //システムのプロキシの設定全部乗っ取る
+			//FiddlerApplication.Startup(0, Fiddler.FiddlerCoreStartupFlags.RegisterAsSystemProxy);  //システムのプロキシの設定全部乗っ取る
 
 			URLMonInterop.SetProxyInProcess(string.Format("127.0.0.1:{0}", Fiddler.FiddlerApplication.oProxy.ListenPort), "<local>");
 			//oSession["x-overrideGateway"] = string.Format("localhost:{0:D}", proxy.UpstreamPort); // 上流プロキシの設定?
@@ -58,7 +58,7 @@ namespace FiddlerTest
 			if (true) //oSession.fullUrl.Contains("125.6.189.247"))  //宿毛湾泊地サーバのIP
 			{
 				var responseResult = oSession.GetResponseBodyAsString();
-				//Debug.WriteLine(responseResult);
+				Debug.WriteLine(responseResult);
 				if (oSession.fullUrl.Contains("/kcsapi/"))
 				{
 
@@ -68,7 +68,7 @@ namespace FiddlerTest
 					try
 					{
 						var jsonData = DynamicJson.Parse(responseResult.Replace("svdata=", string.Empty));
-
+						
 						//装備のデータリスト(jsonData.api_data.api_mst_slotitem)を取得しログに吐く
 						try
 						{
